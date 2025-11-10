@@ -1,0 +1,66 @@
+@model E_com_Web.Models.Shoe
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="product-details">
+    <div class="container">
+        <div class="product-detail-container">
+            <div class="product-image">
+                <img src="@Model.ImageUrl" alt="@Model.Name" />
+            </div>
+            <div class="product-info-detail">
+                <h1>@Model.Name</h1>
+                <p class="brand">@Model.Brand</p>
+                @if (Model.Rating.HasValue)
+                {
+                    <div class="rating">
+                        <span>⭐ @Model.Rating.Value.ToString("F1")</span>
+                        <span class="reviews">(@Model.ReviewCount reviews)</span>
+                    </div>
+                }
+                <p class="price">$@Model.Price.ToString("F2")</p>
+                <p class="description">@Model.Description</p>
+                
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="add-to-cart-form">
+                    <input type="hidden" name="shoeId" value="@Model.Id" />
+                    
+                    <div class="form-group">
+                        <label for="size">Size:</label>
+                        <select name="size" id="size" required>
+                            <option value="">Select Size</option>
+                            @foreach (var size in Model.Sizes)
+                            {
+                                <option value="@size">@size</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="color">Color:</label>
+                        <select name="color" id="color" required>
+                            <option value="">Select Color</option>
+                            @foreach (var color in Model.Colors)
+                            {
+                                <option value="@color">@color</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" name="quantity" id="quantity" value="1" min="1" max="@Model.Stock" required />
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-large">Add to Cart</button>
+                </form>
+                
+                <div class="product-meta">
+                    <p><strong>Category:</strong> @Model.Category</p>
+                    <p><strong>Stock:</strong> @Model.Stock available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,65 @@
+@model List<E_com_Web.Models.Shoe>
+@{
+    ViewData["Title"] = "Products";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    var selectedCategory = ViewBag.SelectedCategory as string;
+    var searchTerm = ViewBag.SearchTerm as string;
+}
+
+<section class="products-page">
+    <div class="container">
+        <h1>Our Products</h1>
+        
+        <div class="products-controls">
+            <form asp-controller="Products" asp-action="Index" method="get" class="search-form">
+                <input type="text" name="search" placeholder="Search shoes..." value="@searchTerm" />
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            
+            <div class="category-filter">
+                <a asp-controller="Products" asp-action="Index" 
+                   class="category-btn @(string.IsNullOrEmpty(selectedCategory) ? "active" : "")">
+                    All
+                </a>
+                @foreach (var category in categories)
+                {
+                    <a asp-controller="Products" asp-action="Index" asp-route-category="@category"
+                       class="category-btn @(selectedCategory == category ? "active" : "")">
+                        @category
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="product-grid">
+            @if (Model.Any())
+            {
+                @foreach (var shoe in Model)
+                {
+                    <div class="product-card">
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@shoe.Id">
+                            <img src="@shoe.ImageUrl" alt="@shoe.Name" />
+                            <div class="product-info">
+                                <h3>@shoe.Name</h3>
+                                <p class="brand">@shoe.Brand</p>
+                                <p class="price">$@shoe.Price.ToString("F2")</p>
+                                @if (shoe.Rating.HasValue)
+                                {
+                                    <div class="rating">
+                                        <span>⭐ @shoe.Rating.Value.ToString("F1")</span>
+                                        <span class="reviews">(@shoe.ReviewCount reviews)</span>
+                                    </div>
+                                }
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="no-products">No products found. Try a different search or category.</p>
+            }
+        </div>
+    </div>
+</section>
+
