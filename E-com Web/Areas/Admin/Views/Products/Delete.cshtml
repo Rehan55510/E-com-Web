@@ -1,0 +1,23 @@
+@model E_com_Web.Models.Shoe
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Delete Product";
+}
+
+<div class="container py-3">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <h4 class="text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Confirm Deletion</h4>
+            <p>Are you sure you want to delete the product <strong>@Model.Name</strong> (ID: @Model.Id)? This action cannot be undone.</p>
+
+            <div class="d-flex gap-2">
+                <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-light">Cancel</a>
+                <form asp-area="Admin" asp-controller="Products" asp-action="Delete" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash3 me-1"></i>Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
