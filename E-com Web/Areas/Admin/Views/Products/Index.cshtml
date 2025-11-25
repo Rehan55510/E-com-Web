@@ -82,16 +82,42 @@
         <div class="modal-body">
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label">Name</label>
-              <input class="form-control" name="Name" required />
+              <label class="form-label">Name *</label>
+              <input class="form-control" name="name" required />
             </div>
             <div class="col-md-6">
-              <label class="form-label">Price</label>
-              <input class="form-control" name="Price" type="number" step="0.01" min="0" required />
+              <label class="form-label">Brand *</label>
+              <input class="form-control" name="brand" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Price *</label>
+              <input class="form-control" name="price" type="number" step="0.01" min="0" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Category *</label>
+              <input class="form-control" name="category" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Stock</label>
+              <input class="form-control" name="stock" type="number" min="0" value="0" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Image URL</label>
+              <input class="form-control" name="imageUrl" type="url" placeholder="https://..." />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Sizes (comma-separated)</label>
+              <input class="form-control" name="sizes" placeholder="7,8,9,10,11" />
+              <small class="text-muted">Example: 7,8,9,10,11</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Colors (comma-separated)</label>
+              <input class="form-control" name="colors" placeholder="Black,White,Red" />
+              <small class="text-muted">Example: Black,White,Red</small>
             </div>
             <div class="col-12">
               <label class="form-label">Description</label>
-              <textarea class="form-control" name="Description" rows="3"></textarea>
+              <textarea class="form-control" name="description" rows="3"></textarea>
             </div>
           </div>
         </div>
@@ -117,11 +143,11 @@
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">Product ID</label>
-            <input class="form-control" name="Id" required />
+            <input class="form-control" name="id" id="productId" readonly />
           </div>
           <div class="mb-3">
             <label class="form-label">New Price</label>
-            <input class="form-control" name="Price" type="number" step="0.01" min="0" required />
+            <input class="form-control" name="price" type="number" step="0.01" min="0" required />
           </div>
         </div>
         <div class="modal-footer">
@@ -132,3 +158,14 @@
     </div>
   </div>
 </div>
+
+@section Scripts {
+  <script>
+    // Auto-populate product ID when price modal opens
+    document.getElementById('priceModal').addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget;
+      var productId = button.getAttribute('data-id');
+      document.getElementById('productId').value = productId;
+    });
+  </script>
+}

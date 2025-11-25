@@ -12,9 +12,10 @@ public class HomeController : Controller
         _shoeService = shoeService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var featuredShoes = _shoeService.GetAllShoes().Take(6).ToList();
+        var shoes = await _shoeService.GetAllShoesAsync();
+        var featuredShoes = shoes.Take(6).ToList();
         return View(featuredShoes);
     }
 

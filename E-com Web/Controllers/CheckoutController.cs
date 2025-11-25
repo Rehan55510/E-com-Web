@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using E_com_Web.Models;
 using E_com_Web.Services;
+using E_com_Web.Infrastructure.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 
 namespace E_com_Web.Controllers;
@@ -8,11 +10,15 @@ namespace E_com_Web.Controllers;
 public class CheckoutController : Controller
 {
     private readonly ICartService _cartService;
+    private readonly IOrderService _orderService;
+    private readonly IHubContext<OrderHub> _hubContext;
     private const string CartSessionKey = "Cart";
 
-    public CheckoutController(ICartService cartService)
+    public CheckoutController(ICartService cartService, IOrderService orderService, IHubContext<OrderHub> hubContext)
     {
         _cartService = cartService;
+        _orderService = orderService;
+        _hubContext = hubContext;
     }
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -57,7 +63,7 @@ public class CheckoutController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult ProcessOrder(CheckoutViewModel model)
+    public async Task<IActionResult> ProcessOrder(CheckoutViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -66,15 +72,27 @@ public class CheckoutController : Controller
             return View("Index", model);
         }
 
-        // Clear cart
+        var cartItems = GetCart();
+        
+        // Create real order in database
+        var order = await _orderService.CreateOrderAsync(model, cartItems);
+
+        // Clear cart after successful order
         HttpContext.Session.Remove(CartSessionKey);
 
-        // In a real application, you would process the payment and save the order here
-        return RedirectToAction("Success");
+        // Broadcast to all admin users via SignalR
+        await _hubContext.Clients.Group("Admins").SendAsync("ReceiveNewOrder", 
+            order.Id, 
+            order.Customer.FullName, 
+            order.TotalAmount);
+
+        // Redirect to success with order ID
+        return RedirectToAction("Success", new { orderId = order.Id });
     }
 
-    public IActionResult Success()
+    public IActionResult Success(int orderId)
     {
+        ViewBag.OrderId = orderId;
         return View();
     }
 }

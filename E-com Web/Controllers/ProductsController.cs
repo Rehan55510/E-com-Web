@@ -12,30 +12,30 @@ public class ProductsController : Controller
         _shoeService = shoeService;
     }
 
-    public IActionResult Index(string? category, string? search)
+    public async Task<IActionResult> Index(string? category, string? search)
     {
-        var shoes = _shoeService.GetAllShoes();
+        var shoes = await _shoeService.GetAllShoesAsync();
         
         if (!string.IsNullOrEmpty(category))
         {
-            shoes = _shoeService.GetShoesByCategory(category);
+            shoes = await _shoeService.GetShoesByCategoryAsync(category);
         }
         
         if (!string.IsNullOrEmpty(search))
         {
-            shoes = _shoeService.SearchShoes(search);
+            shoes = await _shoeService.SearchShoesAsync(search);
         }
 
-        ViewBag.Categories = _shoeService.GetCategories();
+        ViewBag.Categories = await _shoeService.GetCategoriesAsync();
         ViewBag.SelectedCategory = category;
         ViewBag.SearchTerm = search;
         
         return View(shoes);
     }
 
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
-        var shoe = _shoeService.GetShoeById(id);
+        var shoe = await _shoeService.GetShoeByIdAsync(id);
         if (shoe == null)
         {
             return NotFound();

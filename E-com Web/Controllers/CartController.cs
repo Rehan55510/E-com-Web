@@ -54,9 +54,9 @@ public class CartController : Controller
     }
 
     [HttpPost]
-    public IActionResult AddToCart(int shoeId, string size, string color, int quantity = 1)
+    public async Task<IActionResult> AddToCart(int shoeId, string size, string color, int quantity = 1)
     {
-        var shoe = _shoeService.GetShoeById(shoeId);
+        var shoe = await _shoeService.GetShoeByIdAsync(shoeId);
         if (shoe == null)
         {
             return NotFound();

@@ -1,0 +1,177 @@
+@model E_com_Web.Models.Order
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = $"Order #{Model.Id}";
+}
+
+<div class="container py-3">
+    @if (TempData["Success"] is string msg)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i> @msg
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0"><i class="bi bi-receipt me-2"></i>Order #@Model.Id</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Orders
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Order Info Card -->
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5><i class="bi bi-box-seam me-2"></i>Order Details</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th width="150">Order ID:</th>
+                                <td><strong>#@Model.Id</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Order Date:</th>
+                                <td>@Model.OrderDate.ToString("MMMM dd, yyyy hh:mm tt")</td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td>
+                                    @if (Model.OrderStatus == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark">@Model.OrderStatus</span>
+                                    }
+                                    else if (Model.OrderStatus == "Processing")
+                                    {
+                                        <span class="badge bg-info">@Model.OrderStatus</span>
+                                    }
+                                    else if (Model.OrderStatus == "Completed" || Model.OrderStatus == "Shipped")
+                                    {
+                                        <span class="badge bg-success">@Model.OrderStatus</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">@Model.OrderStatus</span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Payment Status:</th>
+                                <td>
+                                    @if (Model.PaymentStatus == "Paid")
+                                    {
+                                        <span class="badge bg-success">@Model.PaymentStatus</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@Model.PaymentStatus</span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Payment Method:</th>
+                                <td>@Model.PaymentMethod</td>
+                            </tr>
+                            <tr>
+                                <th>Total Amount:</th>
+                                <td><strong class="text-success">$@Model.TotalAmount.ToString("N2")</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-cart me-2"></i>Order Items</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Brand</th>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td><strong>@item.ProductName</strong></td>
+                                    <td>@item.Brand</td>
+                                    <td><span class="badge bg-secondary">@item.Size</span></td>
+                                    <td><span class="badge bg-info">@item.Color</span></td>
+                                    <td>@item.Quantity</td>
+                                    <td>$@item.PricePerUnit.ToString("N2")</td>
+                                    <td><strong>$@item.Subtotal.ToString("N2")</strong></td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="6" class="text-end">Total:</th>
+                                <th><strong class="text-success">$@Model.TotalAmount.ToString("N2")</strong></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Info & Actions -->
+        <div class="col-md-4">
+            <!-- Customer Details -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5><i class="bi bi-person me-2"></i>Customer Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong><br/>@Model.Customer.FullName</p>
+                    <p><strong>Email:</strong><br/><a href="mailto:@Model.Customer.Email">@Model.Customer.Email</a></p>
+                    <p><strong>Phone:</strong><br/><a href="tel:@Model.Customer.Phone">@Model.Customer.Phone</a></p>
+                    <p class="mb-0"><strong>Shipping Address:</strong><br/>
+                        @Model.Customer.Address<br/>
+                        @Model.Customer.City, @Model.Customer.State @Model.Customer.ZipCode<br/>
+                        @Model.Customer.Country
+                    </p>
+                </div>
+            </div>
+
+            <!-- Update Status -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-pencil me-2"></i>Update Status</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateStatus" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <div class="mb-3">
+                            <label class="form-label">Order Status:</label>
+                            <select name="status" class="form-select" required>
+                                <option value="Pending" selected="@(Model.OrderStatus == "Pending")">Pending</option>
+                                <option value="Processing" selected="@(Model.OrderStatus == "Processing")">Processing</option>
+                                <option value="Completed" selected="@(Model.OrderStatus == "Completed")">Completed</option>
+                                <option value="Shipped" selected="@(Model.OrderStatus == "Shipped")">Shipped</option>
+                                <option value="Cancelled" selected="@(Model.OrderStatus == "Cancelled")">Cancelled</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-check-circle me-1"></i> Update Status
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

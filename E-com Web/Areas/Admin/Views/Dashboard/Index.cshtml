@@ -1,378 +1,216 @@
+@model E_com_Web.Areas.Admin.Models.DashboardStats
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<!-- Hero -->
-<section class="position-relative overflow-hidden">
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom right, rgba(17,24,39,.85), rgba(2,6,23,.85)), url('https://images.unsplash.com/photo-1519223400710-6da9e1b777ea?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;"></div>
-    <div class="container position-relative py-5">
-        <div class="text-white">
-            <h1 class="display-5 fw-bold">Welcome back, Admin 👋</h1>
-            <p class="text-white-50 mb-0">Monitor store performance and manage your e‑commerce operations.</p>
-        </div>
-    </div>
-</section>
-
 <div class="container py-4">
-    <!-- Overview Cards -->
+    <div class="mb-4">
+        <h2><i class="bi bi-speedometer2 me-2"></i>Dashboard</h2>
+        <p class="text-muted">Monitor your store performance with real-time data</p>
+    </div>
+
+    <!-- Stats Cards -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card card-hover shadow-sm border-0">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="p-3 rounded-3 bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
-                        <i class="bi bi-box-seam fs-4"></i>
-                    </div>
-                    <div class="flex-fill">
-                        <div class="text-muted small">Total Products</div>
-                        <div class="h4 mb-0">1,245</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card card-hover shadow-sm border-0">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="p-3 rounded-3 bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
-                        <i class="bi bi-receipt fs-4"></i>
-                    </div>
-                    <div class="flex-fill">
-                        <div class="text-muted small">Total Orders</div>
-                        <div class="h4 mb-0">8,930</div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-primary bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-receipt fs-4 text-primary"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Total Orders</div>
+                            <h3 class="mb-0">@Model.TotalOrders</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card card-hover shadow-sm border-0">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="p-3 rounded-3 bg-gradient-to-br from-amber-500 to-orange-600 text-white">
-                        <i class="bi bi-currency-dollar fs-4"></i>
-                    </div>
-                    <div class="flex-fill">
-                        <div class="text-muted small">Total Revenue</div>
-                        <div class="h4 mb-0">$527,400</div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-success bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-currency-dollar fs-4 text-success"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Total Revenue</div>
+                            <h3 class="mb-0">$@Model.TotalRevenue.ToString("N2")</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card card-hover shadow-sm border-0">
-                <div class="card-body d-flex align-items-center gap-3">
-                    <div class="p-3 rounded-3 bg-gradient-to-br from-pink-500 to-rose-600 text-white">
-                        <i class="bi bi-people fs-4"></i>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-info bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-box-seam fs-4 text-info"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Total Products</div>
+                            <h3 class="mb-0">@Model.TotalProducts</h3>
+                        </div>
                     </div>
-                    <div class="flex-fill">
-                        <div class="text-muted small">Total Users</div>
-                        <div class="h4 mb-0">14,210</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 bg-warning bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-exclamation-triangle fs-4 text-warning"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Low Stock</div>
+                            <h3 class="mb-0">@Model.LowStockProducts</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Product Management -->
+    <!-- Orders by Status -->
     <div class="row g-3 mb-4">
-        <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm card-hover h-100">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Orders by Status</h5>
+                </div>
                 <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h5 class="card-title mb-0"><i class="bi bi-box-seam me-2"></i>Manage Products</h5>
-                        <span class="badge bg-primary-subtle text-primary">Catalog</span>
-                    </div>
-                    <p class="text-muted mb-3">Create, update, and organize products in your store.</p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" data-bs-toggle2="tooltip" title="Create a new product">
-                            <i class="bi bi-plus-circle me-1"></i> Add New Product
-                        </button>
-                        <a class="btn btn-outline-secondary" asp-area="Admin" asp-controller="Products" asp-action="Index" data-bs-toggle="tooltip" title="Edit existing products">
-                            <i class="bi bi-pencil-square me-1"></i> Edit / Update
-                        </a>
-                        <button class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#priceModal" data-bs-toggle2="tooltip" title="Change pricing">
-                            <i class="bi bi-cash-coin me-1"></i> Change Price
-                        </button>
-                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-toggle2="tooltip" title="Delete a product">
-                            <i class="bi bi-trash3 me-1"></i> Delete Product
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Orders -->
-        <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm card-hover h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h5 class="card-title mb-0"><i class="bi bi-bag-check me-2"></i>Order Management</h5>
-                        <span class="badge bg-success-subtle text-success">Orders</span>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-6 col-md-3">
-                            <a class="text-decoration-none" asp-area="Admin" asp-controller="Orders" asp-action="Index">
-                                <div class="p-3 rounded border bg-white h-100 card-hover text-center">
-                                    <div class="text-muted small">All</div>
-                                    <div class="h5 mb-0">2,340</div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <a class="text-decoration-none" asp-area="Admin" asp-controller="Orders" asp-action="Pending">
-                                <div class="p-3 rounded border bg-white h-100 card-hover text-center">
-                                    <div class="text-warning small">Pending</div>
-                                    <div class="h5 mb-0">128</div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <a class="text-decoration-none" asp-area="Admin" asp-controller="Orders" asp-action="Completed">
-                                <div class="p-3 rounded border bg-white h-100 card-hover text-center">
-                                    <div class="text-success small">Completed</div>
-                                    <div class="h5 mb-0">2,050</div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <a class="text-decoration-none" asp-area="Admin" asp-controller="Orders" asp-action="Cancelled">
-                                <div class="p-3 rounded border bg-white h-100 card-hover text-center">
-                                    <div class="text-danger small">Cancelled</div>
-                                    <div class="h5 mb-0">162</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Users + Settings/Reports -->
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm card-hover h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h5 class="card-title mb-0"><i class="bi bi-people me-2"></i>User Management</h5>
-                        <span class="badge bg-info-subtle text-info">Accounts</span>
-                    </div>
-                    <p class="text-muted mb-3">Manage users and roles.</p>
-                    <div class="row g-3">
-                        <div class="col-12 col-md-4">
-                            <a class="btn btn-outline-primary w-100" asp-area="Admin" asp-controller="Users" asp-action="Index">
-                                <i class="bi bi-person-lines-fill me-1"></i> View Users
-                            </a>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <a class="btn btn-outline-secondary w-100" asp-area="Admin" asp-controller="Users" asp-action="Roles">
-                                <i class="bi bi-person-gear me-1"></i> Manage Roles
-                            </a>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#deactivateUserModal">
-                                <i class="bi bi-person-x me-1"></i> Deactivate User
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-6">
-            <div class="row g-3 h-100">
-                <div class="col-12 col-md-6">
-                    <a class="text-decoration-none" asp-area="Admin" asp-controller="Settings" asp-action="Index">
-                        <div class="card border-0 shadow-sm card-hover h-100">
-                            <div class="card-body d-flex flex-column justify-content-center align-items-start">
-                                <div class="p-3 rounded-3 bg-gradient-to-br from-slate-500 to-slate-700 text-white mb-2">
-                                    <i class="bi bi-gear fs-4"></i>
-                                </div>
-                                <h6 class="mb-1">Settings</h6>
-                                <span class="text-muted small">General configuration</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-12 col-md-6">
-                    <a class="text-decoration-none" asp-area="Admin" asp-controller="Reports" asp-action="Index">
-                        <div class="card border-0 shadow-sm card-hover h-100">
-                            <div class="card-body d-flex flex-column justify-content-center align-items-start">
-                                <div class="p-3 rounded-3 bg-gradient-to-br from-violet-500 to-purple-700 text-white mb-2">
-                                    <i class="bi bi-graph-up-arrow fs-4"></i>
-                                </div>
-                                <h6 class="mb-1">Reports</h6>
-                                <span class="text-muted small">Sales & analytics</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chart Section -->
-    <div class="card border-0 shadow-sm card-hover mb-4">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="card-title mb-0"><i class="bi bi-bar-chart-line me-2"></i>Sales (Last 12 Months)</h5>
-                <span class="badge bg-secondary-subtle text-secondary">Analytics</span>
-            </div>
-            <canvas id="salesChart" height="90"></canvas>
-        </div>
-    </div>
-</div>
-
-<!-- Add Product Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Add New Product</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form asp-area="Admin" asp-controller="Products" asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label">Name</label>
-              <input class="form-control" name="Name" required />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Price</label>
-              <input class="form-control" name="Price" type="number" step="0.01" min="0" required />
-            </div>
-            <div class="col-12">
-              <label class="form-label">Description</label>
-              <textarea class="form-control" name="Description" rows="3"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Change Price Modal -->
-<div class="modal fade" id="priceModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-md modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-cash-coin me-2"></i>Change Product Price</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form asp-area="Admin" asp-controller="Products" asp-action="UpdatePrice" method="post">
-        @Html.AntiForgeryToken()
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Product ID</label>
-            <input class="form-control" name="Id" required />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">New Price</label>
-            <input class="form-control" name="Price" type="number" step="0.01" min="0" required />
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-warning text-white">Update</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Delete Product Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-md modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-trash3 me-2"></i>Delete Product</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form asp-area="Admin" asp-controller="Products" asp-action="Delete" method="post">
-        @Html.AntiForgeryToken()
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Product ID</label>
-            <input class="form-control" name="Id" required />
-          </div>
-          <div class="alert alert-warning small" role="alert">
-            This action is permanent and cannot be undone.
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Deactivate User Modal -->
-<div class="modal fade" id="deactivateUserModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-md modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-person-x me-2"></i>Deactivate User</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form asp-area="Admin" asp-controller="Users" asp-action="Deactivate" method="post">
-        @Html.AntiForgeryToken()
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">User ID</label>
-            <input class="form-control" name="UserId" required />
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="true" id="notifyUser" name="Notify" checked>
-            <label class="form-check-label" for="notifyUser">
-              Notify user via email
-            </label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-outline-danger">Deactivate</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-@section Scripts {
-    <script>
-        // Simple demo data for chart; replace with real data via fetch to Admin API
-        const ctx = document.getElementById('salesChart');
-        if (ctx) {
-            const data = {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Revenue',
-                    data: [12, 19, 15, 22, 28, 30, 27, 35, 40, 38, 45, 52],
-                    borderColor: 'rgba(99, 102, 241, 1)',
-                    backgroundColor: 'rgba(99, 102, 241, .15)',
-                    fill: true,
-                    tension: .35,
-                    borderWidth: 2,
-                    pointRadius: 0
-                }]
-            };
-            new Chart(ctx, {
-                type: 'line',
-                data,
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.05)' } },
-                        x: { grid: { display: false } }
+                    @if (Model.OrdersByStatus.Any())
+                    {
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="text-end">Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var status in Model.OrdersByStatus)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (status.Key == "Pending")
+                                            {
+                                                <span class="badge bg-warning text-dark">@status.Key</span>
+                                            }
+                                            else if (status.Key == "Processing")
+                                            {
+                                                <span class="badge bg-info">@status.Key</span>
+                                            }
+                                            else if (status.Key == "Completed" || status.Key == "Shipped")
+                                            {
+                                                <span class="badge bg-success">@status.Key</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">@status.Key</span>
+                                            }
+                                        </td>
+                                        <td class="text-end"><strong>@status.Value</strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     }
-                }
-            });
-        }
-    </script>
-}
+                    else
+                    {
+                        <p class="text-muted mb-0">No orders yet</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-grid me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="btn btn-outline-primary">
+                            <i class="bi bi-receipt me-2"></i>View All Orders
+                        </a>
+                        <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-outline-success">
+                            <i class="bi bi-box-seam me-2"></i>Manage Products
+                        </a>
+                        <a asp-area="Admin" asp-controller="Orders" asp-action="Index" asp-route-status="Pending" class="btn btn-outline-warning">
+                            <i class="bi bi-clock me-2"></i>Pending Orders
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Orders</h5>
+            <a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body">
+            @if (Model.RecentOrders.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.RecentOrders)
+                            {
+                                <tr>
+                                    <td><strong>#@order.Id</strong></td>
+                                    <td>@order.Customer.FullName</td>
+                                    <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                                    <td><strong>$@order.TotalAmount.ToString("N2")</strong></td>
+                                    <td>
+                                        @if (order.OrderStatus == "Pending")
+                                        {
+                                            <span class="badge bg-warning text-dark">@order.OrderStatus</span>
+                                        }
+                                        else if (order.OrderStatus == "Processing")
+                                        {
+                                            <span class="badge bg-info">@order.OrderStatus</span>
+                                        }
+                                        else if (order.OrderStatus == "Completed" || order.OrderStatus == "Shipped")
+                                        {
+                                            <span class="badge bg-success">@order.OrderStatus</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@order.OrderStatus</span>
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        <a asp-area="Admin" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted mb-0 text-center py-4">No orders yet. Orders will appear here as customers place them.</p>
+            }
+        </div>
+    </div>
+</div>

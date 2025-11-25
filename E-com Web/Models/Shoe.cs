@@ -14,5 +14,6 @@ public class Shoe
     public int Stock { get; set; }
     public decimal? Rating { get; set; }
     public int? ReviewCount { get; set; }
+    public bool ShowOnHome { get; set; } = true;  // NEW - Show product on homepage
 }
 

@@ -1,27 +1,45 @@
-// Update cart count on page load
-document.addEventListener('DOMContentLoaded', function() {
+// Mobile Menu Toggle
+document.addEventListener('DOMContentLoaded', function () {
+    // Update cart count
     updateCartCount();
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+
+    if (mobileMenuBtn && navMenu) {
+        mobileMenuBtn.addEventListener('click', function () {
+            navMenu.classList.toggle('active');
+            const isExpanded = navMenu.classList.contains('active');
+            mobileMenuBtn.setAttribute('aria-expanded', isExpanded);
+            mobileMenuBtn.innerHTML = isExpanded ? '✕' : '☰';
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.navbar')) {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                mobileMenuBtn.innerHTML = '☰';
+            }
+        });
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function () {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                mobileMenuBtn.innerHTML = '☰';
+            });
+        });
+    }
 });
 
-// Function to update cart count
-async function updateCartCount() {
-    try {
-        const response = await fetch('/Cart/GetCartCount');
-        const data = await response.json();
-        const cartCountElement = document.getElementById('cart-count');
-        if (cartCountElement) {
-            cartCountElement.textContent = data.count;
-        }
-    } catch (error) {
-        console.error('Error updating cart count:', error);
+function updateCartCount() {
+    const cart = JSON.parse(sessionStorage.getItem('Cart') || '{}');
+    const totalItems = Object.values(cart).reduce((sum, item) => sum + (item.Quantity || 0), 0);
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = totalItems;
     }
 }
-
-// Update cart count after adding to cart
-document.addEventListener('submit', function(event) {
-    const form = event.target;
-    if (form.action && form.action.includes('/Cart/AddToCart')) {
-        setTimeout(updateCartCount, 500);
-    }
-});
-
